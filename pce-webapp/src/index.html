@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Estimación de Costos de Proyectos</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/data.js" defer></script>
+    <script src="js/workers.js" defer></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>PCE</h1>
+                <span>Estimación</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active">Dashboard</a>
+                <a href="views/pricing.html" class="nav-item">Pricing</a>
+                <a href="views/workers.html" class="nav-item">Workers</a>
+                <a href="#" class="nav-item">Clients</a>
+                <a href="#" class="nav-item">Reports</a>
+                <a href="#" class="nav-item">Configuration</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-trigger" id="s3-trigger">Agregar (Trigger)</button>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h2>Estimación de Costos de Proyectos</h2>
+                </div>
+                <div class="topbar-right">
+                    <input id="global-search" class="search-input" placeholder="Buscar..." />
+                </div>
+            </header>
+
+            <main class="content">
+                <section class="cards">
+                    <div class="card">
+                        <h3>Gestión de Trabajadores</h3>
+                        <p>Crear, editar y filtrar trabajadores. Ir a la página dedicada para ver la tabla completa.</p>
+                        <div class="card-actions">
+                            <a class="btn btn-primary" href="views/workers.html">Abrir Trabajadores</a>
+                        </div>
+                    </div>
+
+                    <div class="card small">
+                        <h4>Acción rápida</h4>
+                        <button class="btn" id="quick-add">Agregar Trabajador</button>
+                    </div>
+                </section>
+
+                <section class="info">
+                    <h3>Resumen</h3>
+                    <p>Interfaz ligera y responsive. Fondo claro, paleta corporativa y elementos destacados con acentos.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

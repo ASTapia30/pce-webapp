@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Workers — PCE</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script src="../js/data.js" defer></script>
+    <script src="../js/workers.js" defer></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>PCE</h1>
+                <span>Estimation</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="nav-item">Dashboard</a>
+                <a href="pricing.html" class="nav-item">Pricing</a>
+                <a href="workers.html" class="nav-item active">Workers</a>
+                <a href="#" class="nav-item">Clients</a>
+                <a href="#" class="nav-item">Reports</a>
+                <a href="#" class="nav-item">Configuration</a>
+            </nav>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <h2>Workers</h2>
+                <div class="top-actions">
+                    <button class="btn btn-primary" id="open-create">Create Worker</button>
+                    <button class="btn" id="trigger-add">Add (Trigger)</button>
+                </div>
+            </header>
+
+            <main class="content">
+                <section class="table-wrap">
+                    <div class="table-filters">
+                        <input id="filter-employeeId" placeholder="Filter by Employee Id" />
+                        <input id="filter-name" placeholder="Filter by Name" />
+                        <select id="filter-division">
+                            <option value="">All Divisions</option>
+                            <option>Projects</option>
+                            <option>Consulting</option>
+                        </select>
+                        <select id="filter-department">
+                            <option value="">All Departments</option>
+                            <option>Automation</option>
+                            <option>Projects</option>
+                            <option>Onshore</option>
+                        </select>
+                        <select id="filter-billing">
+                            <option value="">All Billing</option>
+                            <option>Account Manager</option>
+                            <option>Consulting Technical Professional</option>
+                        </select>
+                        <select id="filter-paytype">
+                            <option value="">All Pay Types</option>
+                            <option>ESS</option>
+                            <option>EST</option>
+                            <option>NEE</option>
+                        </select>
+                        <input id="filter-location" placeholder="Filter by Location" />
+                        <button class="btn" id="clear-filters">Clear</button>
+                    </div>
+
+                    <table id="workers-table" class="workers-table">
+                        <thead>
+                            <tr>
+                                <th>Employee Id</th>
+                                <th>Name</th>
+                                <th>Division</th>
+                                <th>Department</th>
+                                <th>Billing Classification</th>
+                                <th>Benefit Type</th>
+                                <th>Pay Type</th>
+                                <th>Salary</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- rows generated dynamically -->
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal crear/editar -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modal-title">Create Worker</h3>
+            <form id="worker-form">
+                <input type="hidden" id="worker-id" />
+                <label>Employee Id
+                    <input id="employeeId" required />
+                </label>
+                <label>Name
+                    <input id="name" required />
+                </label>
+                <label>Division
+                    <select id="division">
+                        <option>Projects</option>
+                        <option>Consulting</option>
+                    </select>
+                </label>
+                <label>Department
+                    <select id="department">
+                        <option>Automation</option>
+                        <option>Projects</option>
+                        <option>Onshore</option>
+                    </select>
+                </label>
+                <label>Billing Classification
+                    <select id="billingClassification">
+                        <option>Account Manager</option>
+                        <option>Consulting Technical Professional</option>
+                    </select>
+                </label>
+                <label>Benefit Type
+                    <select id="benefitType">
+                        <option>Contractor</option>
+                        <option>Direct</option>
+                        <option>Temporary</option>
+                    </select>
+                </label>
+                <label>Pay Type
+                    <select id="payType">
+                        <option>ESS</option>
+                        <option>EST</option>
+                        <option>NEE</option>
+                    </select>
+                </label>
+                <label>Salary
+                    <input id="salary" type="number" step="0.01" required />
+                </label>
+                <label>Location
+                    <input id="location" />
+                </label>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn" id="cancel-modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

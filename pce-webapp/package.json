@@ -1,0 +1,24 @@
+{
+  "name": "pce-webapp",
+  "version": "1.0.0",
+  "description": "Aplicación de estimación de costos de proyectos para gestionar trabajadores.",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step not defined'",
+    "test": "echo 'Test step not defined'"
+  },
+  "keywords": [
+    "estimación",
+    "costos",
+    "proyectos",
+    "gestión",
+    "trabajadores"
+  ],
+  "author": "Alfonso Serrano",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

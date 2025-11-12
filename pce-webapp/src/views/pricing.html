@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pricing — PCE</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/data.js" defer></script>
+  <script src="../js/pricing.js" defer></script>
+  <style>
+        /* Fondo del modal (oscurecido) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 16px; /* Espacio para márgenes en pantallas pequeñas */
+            overflow: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    /* Contenedor del contenido */
+    .modal-content {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 1200px;
+      width: 100%;
+      max-height: 95vh; /* Nunca excede el alto de la pantalla */
+      overflow-y: auto; /* Scroll interno si se necesita */
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* New modal grid layout: main form + side panel */
+    .modal-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start}
+    .col-main{min-width:0}
+    .col-side{min-width:0}
+    .field-row{display:flex;gap:12px;flex-wrap:wrap}
+    .field-row > label{flex:1 1 200px}
+    .entries-list{margin-bottom:8px}
+    .summary-box{padding:10px;border-radius:8px;background:#fbfdff;border:1px solid rgba(3,34,63,0.04);font-size:13px}
+    .side-actions{display:flex;flex-direction:column;gap:8px}
+    @media(max-width:900px){.modal-grid{grid-template-columns:1fr} .side-actions{flex-direction:row}}
+
+        .modal-content h3,
+        .modal-content h4 {
+            margin-top: 0;
+        }
+
+        .modal-content form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .modal-content form input,
+        .modal-content form select,
+        .modal-content form textarea {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn {
+            background-color: #e0e0e0;
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+  </style>
+
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>PCE</h1>
+        <span>Estimation</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../index.html" class="nav-item">Dashboard</a>
+        <a href="pricing.html" class="nav-item active">Pricing</a>
+        <a href="workers.html" class="nav-item">Workers</a>
+        <a href="#" class="nav-item">Clients</a>
+        <a href="#" class="nav-item">Reports</a>
+        <a href="#" class="nav-item">Configuration</a>
+      </nav>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h2>Pricing</h2>
+        <div class="top-actions">
+          <button class="btn" id="open-create">New Estimate</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="cards">
+          <div class="card full">
+            <div id="pricing-banner" class="pricing-banner">
+              <div class="card small">
+                <strong id="count-opened">0</strong>
+                <div>Opened</div>
+              </div>
+              <div class="card small wide">
+                <strong id="count-awaiting">0</strong>
+                <div>Awaiting Confirmation</div>
+              </div>
+              <div class="card small">
+                <strong id="count-approved">0</strong>
+                <div>Approved</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="table-wrap">
+          <div class="table-filters">
+            <input id="filter-proposal" placeholder="Filter by Proposal #" />
+            <input id="filter-client" placeholder="Filter by Client" />
+            <select id="filter-status">
+              <option value="">All Status</option>
+              <option>Opened</option>
+              <option>Awaiting Confirmation</option>
+              <option>Approved</option>
+            </select>
+            <button class="btn" id="clear-filters">Clear</button>
+          </div>
+
+          <table id="pricing-table" class="workers-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Proposal #</th>
+                <th>Project</th>
+                <th>Client</th>
+                <th>Remuneration Model</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal create/edit -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modal-title">Create Pricing</h3>
+      <form id="pricing-form">
+        <input type="hidden" id="pricing-id" />
+        <div class="modal-grid">
+          <div class="col-main">
+            <div class="field-row">
+              <label>Date
+                <input id="date" type="date" required />
+              </label>
+              <label>Proposal Project Number
+                <input id="proposalNumber" required />
+              </label>
+              <label>CRM Number
+                <input id="crmNumber" />
+              </label>
+            </div>
+
+            <label>Project Name
+              <input id="projectName" />
+            </label>
+            <label>Scope Description
+              <textarea id="scopeDescription" rows="3"></textarea>
+            </label>
+
+            <div class="field-row">
+              <label>Location
+                <input id="location" />
+              </label>
+              <label>Remuneration Model
+                <select id="remunerationModel">
+                  <option>Multiplier</option>
+                  <option>Lump Sum</option>
+                  <option>Reimbursable</option>
+                </select>
+              </label>
+              <label>Client
+                <select id="clientId"></select>
+              </label>
+            </div>
+
+            <hr />
+            <h4>Labor / Engineers</h4>
+            <div id="engineer-entries" class="entries-list"></div>
+            <button type="button" class="btn" id="add-engineer">Add Engineer</button>
+
+            <hr />
+            <h4>Non-Labor Costs</h4>
+            <div id="nonlabor-entries" class="entries-list"></div>
+            <button type="button" class="btn" id="add-nonlabor">Add Non-Labor Item</button>
+          </div>
+
+          <aside class="col-side">
+            <h4>Summary</h4>
+            <div id="pricing-summary" class="summary-box">No data yet</div>
+
+            <div class="sell-rate">
+              <strong>Sell Rate:</strong> USD <span id="sell-rate">100</span> (fixed)
+            </div>
+
+            <div class="side-actions">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="button" class="btn" id="cancel-modal">Cancel</button>
+            </div>
+          </aside>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
