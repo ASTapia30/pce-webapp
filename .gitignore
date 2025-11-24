@@ -1,0 +1,49 @@
+# Dependencias de Node.js
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de build/distribución
+dist/
+build/
+*.min.js
+*.min.css
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+
+# Package lock (opcional, depende de tu preferencia)
+# package-lock.json
+# yarn.lock
+```
+
+## Cómo usarlo:
+
+1. Crea un archivo llamado `.gitignore` (con el punto al inicio) en la **raíz** de tu proyecto:
+```
+   C:\Users\alfonso.serrano\Desktop\Soft_Dev\pce-webapp\.gitignore
