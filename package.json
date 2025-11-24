@@ -17,8 +17,15 @@
   ],
   "author": "Alfonso Serrano",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "live-server": "^1.2.1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3"
   }
 }

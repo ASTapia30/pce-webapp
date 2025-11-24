@@ -5,13 +5,38 @@
 (function(){
   const STORAGE_KEY = "pce_workers_v1";
   const tableBody = () => document.querySelector("#workers-table tbody");
-  const getData = () => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw) return JSON.parse(raw);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(window.initialWorkers || []));
-    return window.initialWorkers || [];
+  let workers = [];
+
+  const getData = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/workers');
+      if (!response.ok) throw new Error('Error al cargar datos');
+      const data = await response.json();
+      return data;
+    } catch(error) {
+      console.error("Error al cargar datos:", error);
+      return [];
+    }
   };
-  let workers = getData();
+
+  // Agregar nuevo worker a MySQL
+  const saveWorker = async (worker) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/workers', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(worker)
+      });
+      if (!response.ok) throw new Error('Error al guardar');
+      const result = await response.json();
+      console.log('✓ Worker guardado:', result);
+      return result;
+    } catch(error) {
+      console.error("Error al guardar:", error);
+      alert("Error al guardar el trabajador");
+      throw error;
+    }
+  };
 
   // Helpers
   const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(workers));
@@ -23,13 +48,13 @@
     list.forEach(w=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${w.employeeId || ''}</td>
+        <td>${w.id || ''}</td>
         <td>${w.name || ''}</td>
         <td>${w.division || ''}</td>
         <td>${w.department || ''}</td>
-        <td>${w.billingClassification || ''}</td>
-        <td>${w.benefitType || ''}</td>
-        <td>${w.payType || ''}</td>
+        <td>${w.billing_classification || ''}</td>
+        <td>${w.benefit_type || ''}</td>
+        <td>${w.pay_type || ''}</td>
         <td>${Number(w.salary || 0).toFixed(2)}</td>
         <td>${w.location || ''}</td>
         <td>
@@ -42,9 +67,12 @@
   }
 
   // Initial render (if table exists)
-  document.addEventListener("DOMContentLoaded", ()=>{
+  document.addEventListener("DOMContentLoaded", async ()=>{
     const tb = document.querySelector("#workers-table");
-    if(tb) renderTable(workers);
+    if(tb) {
+      workers = await getData();
+      renderTable(workers);
+    }
 
     // Filters (new fields)
     const fEmpId = document.getElementById("filter-employeeId");
@@ -92,9 +120,9 @@
         document.getElementById("name").value = w.name || '';
         document.getElementById("division").value = w.division || '';
         document.getElementById("department").value = w.department || '';
-        document.getElementById("billingClassification").value = w.billingClassification || '';
-        document.getElementById("benefitType").value = w.benefitType || '';
-        document.getElementById("payType").value = w.payType || '';
+        document.getElementById("billingClassification").value = w.billing_classification || '';
+        document.getElementById("benefitType").value = w.benefit_type || '';
+        document.getElementById("payType").value = w.pay_type || '';
         document.getElementById("salary").value = w.salary || '';
         document.getElementById("location").value = w.location || '';
       } else {
@@ -114,12 +142,10 @@
     if(cancel) cancel.addEventListener("click", closeModal);
 
     // Submit form: create or update
-    if(form) form.addEventListener("submit", (ev)=>{
+    if(form) form.addEventListener("submit", async (ev)=>{
       ev.preventDefault();
       const id = document.getElementById("worker-id").value;
       const payload = {
-        id: id || uid(),
-        employeeId: document.getElementById("employeeId").value.trim(),
         name: document.getElementById("name").value.trim(),
         division: document.getElementById("division").value,
         department: document.getElementById("department").value,
@@ -129,15 +155,22 @@
         salary: parseFloat(document.getElementById("salary").value) || 0,
         location: document.getElementById("location").value.trim()
       };
+      
       if(id){
-        // update
+        // update (por ahora solo local, implementarás PUT después)
         workers = workers.map(w=> w.id===id ? payload : w);
       } else {
-        // create
-        workers.unshift(payload);
-        // Placeholder: here you can trigger S3+Lambda integration later
+        // create - guardar en MySQL
+        try {
+          await saveWorker(payload);
+          // Recargar datos desde la base de datos
+          workers = await getData();
+          alert('✓ Trabajador creado exitosamente');
+        } catch(error) {
+          return; // El error ya se muestra en saveWorker
+        }
       }
-      save();
+      
       renderTable(workers);
       closeModal();
     });
